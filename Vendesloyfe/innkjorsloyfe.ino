@@ -19,6 +19,17 @@ const char SIGNALBILDE_AV = 0;
 const char SIGNALBILDE_STOP = 1;
 const char SIGNALBILDE_KJOR = 2;
 const char SIGNALBILDE_LANGSOMT = 3;
+const char VEKSEL_USATT = 0;
+const char VEKSEL_LAGT_OM = 1;
+// Tid for å legge om veksel
+const char VEKSEL_TID_MS = 500; // millisekunder
+// Distanse til innkjør til skyggestasjon
+const char DISTANSE_TIL_SKYGGESTASJON = 1500; // millisekunder
+
+// variables
+// tidsvariabler
+unsigned long foresporselMottatt;
+unsigned long signalRevet;
 
 void setup() {
 	// setup input pins
@@ -32,9 +43,31 @@ void setup() {
 	pinMode(SIGNAL_LANGSOMT, OUTPUT);
 	pinMode(SIGNAL_STOPP, OUTPUT);
 	// set outpins to default
-	digitalWrite(VEKSEL, FALSE); // sett veksel til usatt
+	settVekselTil(VEKSEL_USATT); // sett veksel til usatt
 	settSignalTil(SIGNALBILDE_STOP); // sett signal til stopp
 }
+
+void loop() {
+	
+}
+
+bool sjekkTidMot(unsigned long tid) {
+	if (millis() < tid) 
+		return false;
+	else
+		return true;
+}
+
+void settVekselTil(char retning) {
+	switch (retning) {
+	case VEKSEL_LAGT_OM:
+		digitalWrite(VEKSEL, HIGH);
+		delay(VEKSEL_TID_MS);
+	default:
+		digitalWrite(VEKSEL, LOW);
+		break;
+	}
+}		
 
 void settSignalTil(char bilde) {
 	switch (bilde) {
