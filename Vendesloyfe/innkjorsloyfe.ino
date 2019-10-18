@@ -15,21 +15,30 @@ const int SIGNAL_KJOR = 7; // Utgang for å sette signal til kjør
 const int SIGNAL_LANGSOMT = 8; // Utgang for å sette signal til langsomt
 
 // constants
+// Signalkonstanter
 const char SIGNALBILDE_AV = 0;
 const char SIGNALBILDE_STOP = 1;
 const char SIGNALBILDE_KJOR = 2;
 const char SIGNALBILDE_LANGSOMT = 3;
+// Tid for puls for å legge om signal
+const unsigned int SIGNALBILDE_TID_MS = 0; // millisekunder
+//
+// Vekselkonstanter
 const char VEKSEL_USATT = 0;
 const char VEKSEL_LAGT_OM = 1;
-// Tid for å legge om veksel
-const char VEKSEL_TID_MS = 500; // millisekunder
+// Tid for puls for å legge om veksel
+const unsigned int VEKSEL_TID_MS = 500; // millisekunder
+//
 // Distanse til innkjør til skyggestasjon
-const char DISTANSE_TIL_SKYGGESTASJON = 1500; // millisekunder
+const unsigned int DISTANSE_TIL_SKYGGESTASJON = 1500; // millisekunder
 
 // variables
 // tidsvariabler
 unsigned long foresporselMottatt;
 unsigned long signalRevet;
+// andre variabler
+char signalSettesTil;
+char flags; 
 
 void setup() {
 	// setup input pins
@@ -75,16 +84,28 @@ void settSignalTil(char bilde) {
 		digitalWrite(SIGNAL_STOPP, HIGH);
 		digitalWrite(SIGNAL_KJOR, LOW);
 		digitalWrite(SIGNAL_LANGSOMT, LOW);
+		if (SIGNALBILDE_TID_MS) {
+			delay(SIGNALBILDE_TID_MS);
+			settSignalTil(SIGNALBILDE_AV); 
+		}
 		break;
 	case SIGNALBILDE_KJOR:
 		digitalWrite(SIGNAL_STOPP, LOW);
 		digitalWrite(SIGNAL_KJOR, HIGH);
 		digitalWrite(SIGNAL_LANGSOMT, LOW);
+		if (SIGNALBILDE_TID_MS) {
+			delay(SIGNALBILDE_TID_MS);
+			settSignalTil(SIGNALBILDE_AV); 
+		}
 		break;
 	case SIGNALBILDE_LANGSOMT:
 		digitalWrite(SIGNAL_STOPP, LOW);
 		digitalWrite(SIGNAL_KJOR, HIGH);
 		digitalWrite(SIGNAL_LANGSOMT, HIGH);
+		if (SIGNALBILDE_TID_MS) {
+			delay(SIGNALBILDE_TID_MS);
+			settSignalTil(SIGNALBILDE_AV); 
+		}
 		break;
 	default:
 		digitalWrite(SIGNAL_STOPP, LOW);
