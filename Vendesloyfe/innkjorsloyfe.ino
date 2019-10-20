@@ -33,12 +33,8 @@ const unsigned int VEKSEL_TID_MS = 500; // millisekunder
 const unsigned int DISTANSE_TIL_SKYGGESTASJON = 1500; // millisekunder
 
 // variables
-// tidsvariabler
-unsigned long foresporselMottatt;
-unsigned long signalRevet;
-// andre variabler
-char signalSettesTil;
-bool sperret;
+bool signalRevet = false;
+char signalSettesTil = SIGNALBILDE_AV;
 
 void setup() {
 	// setup input pins
@@ -60,21 +56,16 @@ void loop() {
 	// Når tog passerer signal og signal for riving av signal 
 	// går aktivt lavt
 	if ( !digitalRead(RIVING) ) {
-		// lagre tidspunkt passering for senere sammenlikning
-		// (programvareforrigling)
-		signalRevet=millis();
+		// lagre passering for lokal forrigling av signal
+		signalRevet=true;
 		// sett signalbilde til stopp for sikring av togvei
 		settSignalTil(SIGNALBILDE_STOP);
 	}
 	
-	// Sjekk om signal er revet
-	if ( signalRevet )
-		// om signal er revet, sjekk tid mot distanse i tid frem til
-		// innkjør til skyggestasjon
-		if ( sjekkTidMot(signalRevet,DISTANSE_TIL_SKYGGESTASJON) )
-			// om tog er ankommet skyggestasjon
-			// kanseller programvareforrigling
-			signalRevet=0;
+	// Når signal for sperring går aktivt lavt
+	if ( !digitalRead(SPERRING) )
+		// slå av lokal forrigling av signal
+		signalRevet=false;
 	
 	// Om forespørsel om innkjør til vendesløyfe mottas
 	// (en eller begge inngangene går aktivt lavt)
@@ -95,17 +86,10 @@ void loop() {
 		// sett signalbilde som forespurt,
 		settSignalTil(signalSettesTil);
 		// slett forespursel
-		signalSettesTil=0;
+		signalSettesTil=SIGNALBILDE_AV;
 		// og legg om veksel
 		settVekselTil(VEKSEL_LAGT_OM);
 	}
-}
-
-bool sjekkTidMot(unsigned long lagretTid, unsigned long venteTid) {
-	if ( millis() < lagretTid + venteTid ) 
-		return false;
-	else
-		return true;
 }
 
 void settVekselTil(char retning) {
