@@ -2,8 +2,8 @@
 // (c) Aetesaki 2019
 // version 0.1 (UTESTET)
 
-// pins
-// inputs
+// pins must be changed depending on your device
+// inputs 
 const int INNKJ = 1; // Forespørsel om innkjør til vendesløyfe
 const int INNKJAV = 2; // – avvikende
 const int SPERRING = 3; // Sperring av innkjør til vendesløyfe
@@ -38,7 +38,7 @@ unsigned long foresporselMottatt;
 unsigned long signalRevet;
 // andre variabler
 char signalSettesTil;
-char flags; 
+bool sperret;
 
 void setup() {
 	// setup input pins
@@ -57,11 +57,46 @@ void setup() {
 }
 
 void loop() {
+	// Når tog passerer signal og signal for riving av signal 
+	// går aktivt lavt
+	if ( !digitalRead(RIVING) ) {
+		// lagre tidspunkt passering for senere sammenlikning
+		// (programvareforrigling)
+		signalRevet=millis();
+		// sett sperret sann for hard forrigling av togvei
+		sperret=true;
+		// sett signalbilde til stopp for sikring av togvei
+		settSignalTil(SIGNALBILDE_STOP);
+	}
+	
+	// Sjekk om signal er revet
+	if ( signalRevet ) {
+		// om signal er revet, sjekk tid mot distanse i tid frem til
+		// innkjør til skyggestasjon
+		if ( sjekkTidMot(signalRevet,SIGNALBILDE_TID_MS) ) {
+			// om tog er ankommet skyggestasjon
+			// kanseller programvareforrigling
+			signalRevet=0;
+		}
+	}
+	
+	// Om forespørsel om innkjør til vendesløyfe mottas
+	// (en eller begge inngangene går aktivt lavt)
+	if ( !digitalRead(INNKJ) || !digitalRead(INNKJAV) ) {
+		// lagre forespurt signalbilde
+		if ( !digitalRead(INNKJ) ) 
+			signalSettesTil=SIGNALBILDE_KJOR;
+		if ( !digitalRead(INNKJAV) )
+			signalSettesTil=SIGNALBILDE_LANGSOMT;
+		// signalbilde settes kun til kjør dersom en utvetydig 
+		// forespørsel mottas
+	}
+	
 	
 }
 
-bool sjekkTidMot(unsigned long tid) {
-	if (millis() < tid) 
+bool sjekkTidMot(unsigned long lagretTid, unsigned long venteTid) {
+	if ( millis() < lagretTid + venteTid ) 
 		return false;
 	else
 		return true;
