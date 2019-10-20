@@ -78,7 +78,7 @@ void loop() {
 	
 	// Sett signalbilde om alle forutsetninger ligger til rette
 	// hvis forespørsel er mottatt og enten signal ikke er revet
-	// eller innkjør til vendesløyfe er forhindret av tog i togvei
+	// eller innkjør til vendesløyfe ikke er forhindret av tog i togvei
 	if ( signalSettesTil && ( !signalRevet || digitalRead(SPERRING) ) ) {
 		// sett signalbilde som forespurt,
 		settSignalTil(signalSettesTil);
