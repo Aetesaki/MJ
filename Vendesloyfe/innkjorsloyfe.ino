@@ -28,9 +28,6 @@ const char VEKSEL_USATT = 0;
 const char VEKSEL_LAGT_OM = 1;
 // Tid for puls for å legge om veksel
 const unsigned int VEKSEL_TID_MS = 500; // millisekunder
-//
-// Distanse til innkjør til skyggestasjon
-const unsigned int DISTANSE_TIL_SKYGGESTASJON = 1500; // millisekunder
 
 // variables
 bool signalRevet = false;
