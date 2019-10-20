@@ -63,22 +63,18 @@ void loop() {
 		// lagre tidspunkt passering for senere sammenlikning
 		// (programvareforrigling)
 		signalRevet=millis();
-		// sett sperret sann for hard forrigling av togvei
-		sperret=true;
 		// sett signalbilde til stopp for sikring av togvei
 		settSignalTil(SIGNALBILDE_STOP);
 	}
 	
 	// Sjekk om signal er revet
-	if ( signalRevet ) {
+	if ( signalRevet )
 		// om signal er revet, sjekk tid mot distanse i tid frem til
 		// innkjør til skyggestasjon
-		if ( sjekkTidMot(signalRevet,SIGNALBILDE_TID_MS) ) {
+		if ( sjekkTidMot(signalRevet,DISTANSE_TIL_SKYGGESTASJON) )
 			// om tog er ankommet skyggestasjon
 			// kanseller programvareforrigling
 			signalRevet=0;
-		}
-	}
 	
 	// Om forespørsel om innkjør til vendesløyfe mottas
 	// (en eller begge inngangene går aktivt lavt)
@@ -92,7 +88,17 @@ void loop() {
 		// forespørsel mottas
 	}
 	
-	
+	// Sett signalbilde om alle forutsetninger ligger til rette
+	// hvis forespørsel er mottatt og enten signal ikke er revet
+	// eller innkjør til vendesløyfe er forhindret av tog i togvei
+	if ( signalSettesTil && ( !signalRevet || digitalRead(SPERRING) ) ) {
+		// sett signalbilde som forespurt,
+		settSignalTil(signalSettesTil);
+		// slett forespursel
+		signalSettesTil=0;
+		// og legg om veksel
+		settVekselTil(VEKSEL_LAGT_OM);
+	}
 }
 
 bool sjekkTidMot(unsigned long lagretTid, unsigned long venteTid) {
@@ -149,6 +155,3 @@ void settSignalTil(char bilde) {
 		break;
 	}
 }
-	
-	
-	
