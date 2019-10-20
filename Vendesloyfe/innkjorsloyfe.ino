@@ -77,12 +77,13 @@ void loop() {
 	}
 	
 	// Sett signalbilde om alle forutsetninger ligger til rette
+	//
 	// hvis forespørsel er mottatt og hverken lokal forrigling eller
-	// ekstern forrigling er aktiver
+	// ekstern forrigling er aktivert
 	if ( signalSettesTil && !signalRevet && digitalRead(SPERRING) ) {
 		// sett signalbilde som forespurt,
 		settSignalTil(signalSettesTil);
-		// slett forespursel
+		// slett forespørsel
 		signalSettesTil=SIGNALBILDE_AV;
 		// og legg om veksel
 		settVekselTil(VEKSEL_LAGT_OM);
