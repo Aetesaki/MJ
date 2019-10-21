@@ -4,15 +4,15 @@
 
 // pins must be changed depending on your device
 // inputs 
-const int FORESPORSEL_KJOR = 1; // Forespørsel om innkjør til vendesløyfe
-const int FORESPORSEL_AVVIKENDE = 2; // – avvikende
-const int FORRIGLING_INN = 3; // Innkommende forrigling
-const int FORRIGLING_LOKAL = 4; // Lokal forrigling
+const int FORESPORSEL_KJOR = 11; // Forespørsel om innkjør til vendesløyfe
+const int FORESPORSEL_AVVIKENDE = 10; // – avvikende
+const int FORRIGLING_INN = 2; // Innkommende forrigling
+const int FORRIGLING_LOKAL = 12; // Lokal forrigling
 // outputs
-const int VEKSEL = 5; // Utgang for å legge om veksel
-const int SIGNAL_STOPP = 6; // Utgang for å sette signal til stopp
-const int SIGNAL_KJOR = 7; // – kjør
-const int SIGNAL_AVVIKENDE = 8; // – avvikende
+const int VEKSEL = 7; // Utgang for å legge om veksel
+const int SIGNAL_STOPP = 3; // Utgang for å sette signal til stopp
+const int SIGNAL_KJOR = 4; // – kjør
+const int SIGNAL_AVVIKENDE = 5; // – avvikende
 
 // constants
 // Signalkonstanter
@@ -50,18 +50,21 @@ void setup() {
 }
 
 void loop() {
-	// Når inngang for lokal forrigling går aktivt lavt
-	if ( !digitalRead(FORRIGLING_LOKAL) ) {
-		// sett lokal forrigling
-		lokalForrigling=true;
-		// og sett signalbilde til stopp for sikring av togvei
-		settSignalTil(SIGNALBILDE_STOP);
-	}
-	
-	// Når signal for inngående forrigling går aktivt lavt
-	if ( !digitalRead(FORRIGLING_INN) )
-		// slå av lokal forrigling
-		lokalForrigling=false;
+	// Når lokal forrigling er satt
+	if ( lokalForrigling ) {
+		// Og inngående forrigling går aktivt lavt
+		if ( !digitalRead(FORRIGLING_INN) )
+			// slå av lokal forrigling
+			lokalForrigling=false;
+	else 
+		// Men når lokal forrigling ikke er satt
+		// og inngang for lokal forrigling går aktivt lavt
+		if ( !digitalRead(FORRIGLING_LOKAL) ) {
+			// sett lokal forrigling
+			lokalForrigling=true;
+			// og sett signalbilde til stopp for sikring av togvei
+			settSignalTil(SIGNALBILDE_STOP);
+		}
 	
 	// Om forespørsel om innkjør til vendesløyfe mottas
 	// (en eller begge inngangene går aktivt lavt)
