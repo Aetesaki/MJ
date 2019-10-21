@@ -1,6 +1,6 @@
 // Sketch for innkjør til vendesløyfe
 // (c) Aetesaki 2019
-// version 0.2 (UTESTET)
+// version 0.3 (KOMPILLERT, MEN UTESTET)
 
 // pins must be changed depending on your device
 // inputs 
@@ -33,6 +33,57 @@ const unsigned int VEKSEL_PULS_MS = 500; // millisekunder
 bool lokalForrigling = false;
 char signalSettesTil = SIGNALBILDE_AV;
 
+// Funksjoner
+void settVekselTil(char retning) {
+	switch (retning) {
+	case VEKSEL_LAGT_OM:
+		digitalWrite(VEKSEL, HIGH);
+		delay(VEKSEL_PULS_MS);
+	default:
+		digitalWrite(VEKSEL, LOW);
+		break;
+	}
+}		
+
+void settSignalTil(char bilde) {
+	switch (bilde) {
+	case SIGNALBILDE_STOP:
+		digitalWrite(SIGNAL_STOPP, HIGH);
+		digitalWrite(SIGNAL_KJOR, LOW);
+		digitalWrite(SIGNAL_AVVIKENDE, LOW);
+		if (SIGNALBILDE_PULS_MS) {
+			delay(SIGNALBILDE_PULS_MS);
+			settSignalTil(SIGNALBILDE_AV); 
+		}
+		break;
+	case SIGNALBILDE_KJOR:
+		digitalWrite(SIGNAL_STOPP, LOW);
+		digitalWrite(SIGNAL_KJOR, HIGH);
+		digitalWrite(SIGNAL_AVVIKENDE, LOW);
+		if (SIGNALBILDE_PULS_MS) {
+			delay(SIGNALBILDE_PULS_MS);
+			settSignalTil(SIGNALBILDE_AV); 
+		}
+		break;
+	case SIGNALBILDE_AVVIKENDE:
+		digitalWrite(SIGNAL_STOPP, LOW);
+		digitalWrite(SIGNAL_KJOR, HIGH);
+		digitalWrite(SIGNAL_AVVIKENDE, HIGH);
+		if (SIGNALBILDE_PULS_MS) {
+			delay(SIGNALBILDE_PULS_MS);
+			settSignalTil(SIGNALBILDE_AV); 
+		}
+		break;
+	default:
+		digitalWrite(SIGNAL_STOPP, LOW);
+		digitalWrite(SIGNAL_KJOR, LOW);
+		digitalWrite(SIGNAL_AVVIKENDE, LOW);
+		break;
+	}
+}
+
+
+// setup
 void setup() {
 	// setup input pins
 	pinMode(FORESPORSEL_KJOR, INPUT_PULLUP);
@@ -49,9 +100,10 @@ void setup() {
 	settSignalTil(SIGNALBILDE_STOP); // sett signal til stopp
 }
 
+// loop
 void loop() {
 	// Når lokal forrigling er satt
-	if ( lokalForrigling ) {
+	if ( lokalForrigling ) 
 		// Og inngående forrigling går aktivt lavt
 		if ( !digitalRead(FORRIGLING_INN) )
 			// slå av lokal forrigling
@@ -89,53 +141,5 @@ void loop() {
 		signalSettesTil=SIGNALBILDE_AV;
 		// og legg om veksel
 		settVekselTil(VEKSEL_LAGT_OM);
-	}
-}
-
-void settVekselTil(char retning) {
-	switch (retning) {
-	case VEKSEL_LAGT_OM:
-		digitalWrite(VEKSEL, HIGH);
-		delay(VEKSEL_PULS_MS);
-	default:
-		digitalWrite(VEKSEL, LOW);
-		break;
-	}
-}		
-
-void settSignalTil(char bilde) {
-	switch (bilde) {
-	case SIGNALBILDE_STOP:
-		digitalWrite(SIGNAL_STOPP, HIGH);
-		digitalWrite(SIGNAL_KJOR, LOW);
-		digitalWrite(SIGNAL_AVVIKENDE, LOW);
-		if (SIGNALBILDE_PULS_MS) {
-			delay(SIGNALBILDE_PULS_MS);
-			settSignalTil(SIGNALBILDE_AV); 
-		}
-		break;
-	case SIGNALBILDE_KJOR:
-		digitalWrite(SIGNAL_STOPP, LOW);
-		digitalWrite(SIGNAL_KJOR, HIGH);
-		digitalWrite(SIGNAL_AVVIKENDE, LOW);
-		if (SIGNALBILDE_PULS_MS) {
-			delay(SIGNALBILDE_PULS_MS);
-			settSignalTil(SIGNALBILDE_AV); 
-		}
-		break;
-	case SIGNALBILDE_LANGSOMT:
-		digitalWrite(SIGNAL_STOPP, LOW);
-		digitalWrite(SIGNAL_KJOR, HIGH);
-		digitalWrite(SIGNAL_AVVIKENDE, HIGH);
-		if (SIGNALBILDE_PULS_MS) {
-			delay(SIGNALBILDE_PULS_MS);
-			settSignalTil(SIGNALBILDE_AV); 
-		}
-		break;
-	default:
-		digitalWrite(SIGNAL_STOPP, LOW);
-		digitalWrite(SIGNAL_KJOR, LOW);
-		digitalWrite(SIGNAL_AVVIKENDE, LOW);
-		break;
 	}
 }
