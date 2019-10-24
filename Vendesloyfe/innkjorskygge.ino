@@ -48,6 +48,8 @@ void loop() {
 			settSimulertSignalTil(SIGNALBILDE_KJOR);
 			// opphev forrigling av innkjør tin vendesløyfe
 			digitalWrite(FORRIGLING_UT, HIGH);
+			// sett siste tog som ikke ankommet
+			sisteTogAnkommet=false;
 		}
 	}
 	// hvis siste tog ikke er ankommet
