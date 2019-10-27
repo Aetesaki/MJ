@@ -24,6 +24,7 @@ String inputString = "";
 
 byte speedArrayA [] = {20,30,40,50,60,70,80,90,100,110,120,130,140,150,160,170,180,190,200,210,220,230,240,255};
 byte speedArrayB [] = {20,30,40,50,60,70,80,90,100,110,120,130,140,150,160,170,180,190,200,210,220,230,240,255};
+byte URBUnits [] = { 2, 3, 4, 5, 67, 103 };
 
 bool switch_A = true, switch_B = true, switch_C = true, switch_D = true,
      switch_E = true, switch_F = true, switch_G = true, switch_H = true, 
@@ -53,9 +54,9 @@ void loop() {
   if (stringComplete) {
     // RESET 
     if (inputString =="999z") {
-	  URB.sendDataToBus(2, 99);
-	  URB.sendDataToBus(3, 99);
-	  URB.sendDataToBus(4, 99);
+	  for (byte i = 0; i < sizeof(URBUnits) - 1; i++ ) {
+	    URB.sendDataToBus(URBUnits[i], 99);
+	  }
       resetFunc();
     }  
 
