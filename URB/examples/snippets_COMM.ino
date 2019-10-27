@@ -19,44 +19,51 @@ SoftwareSerial Bluetooth(12, 13); // RX, TX
 
 // VARIABLES
   
+// Variables for decoding commands from external sources
 bool stringComplete = false; 
 String inputString = "";
 
-byte speedArrayA [] = {20,30,40,50,60,70,80,90,100,110,120,130,140,150,160,170,180,190,200,210,220,230,240,255};
-byte speedArrayB [] = {20,30,40,50,60,70,80,90,100,110,120,130,140,150,160,170,180,190,200,210,220,230,240,255};
+// Speed arrays
+// Edit as you please, or use default speed array
+byte speedArrayA [] = URB.defaultSpeedArray:
+byte speedArrayB [] = {34,40,45,50,55,60,70,80,90,100,110,120,130,140,170,180,190,200,210,220,230,240,250,255};
+
+// URB units array
+// add address of URB units to this array
+// Addresses doesn't have to be in numeric order
 byte URBUnits [] = { 2, 3, 4, 5, 67, 103 };
 
+// switches
 bool switch_A = true, switch_B = true, switch_C = true, switch_D = true,
      switch_E = true, switch_F = true, switch_G = true, switch_H = true, 
      switch_I = true, switch_J = true, switch_K = true, switch_L = true,
      switch_M = true, switch_N = true, switch_O = true, switch_P = true;
 
+// flags
 bool flag_change_junc = false;    
 
-
+// setup
 void setup() {
-
 // Initializing COMM
   Serial.begin(9600);
   Bluetooth.begin(9600);
   inputString.reserve(4);
   URB.setupComm();
-
 // Initializing Motor-Driver
   URB.initializeTrack(1, 10, 6, 5);
   URB.initializeTrack(2, 9, 4, 3);
-
 }
 
 void loop() {
-  
   // ----  START PARSING INCOMING APP COMMANDS
   if (stringComplete) {
-    // RESET 
+    // RESET on receiving code 999z
     if (inputString =="999z") {
 	  for (byte i = 0; i < sizeof(URBUnits) - 1; i++ ) {
+		// send command 99 to each URB unit listed in the array
 	    URB.sendDataToBus(URBUnits[i], 99);
 	  }
+	  // reset master
       resetFunc();
     }  
 
