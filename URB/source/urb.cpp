@@ -8,7 +8,7 @@
 //    PWM 122 Hz                       //
 //    V.10.2019  Aetesaki              //
 //                                     //
-//    PROTOCOL 2.5                     //
+//    PROTOCOL 2.3                     //
 //    V.5.2019  Steve Massikker        //
 //-------------------------------------//
 
@@ -75,8 +75,9 @@ void urbclass::initializeTrack(byte track, int enablePin, int  pinA, int pinB) {
 
 // convert internal temporary data to readable data
 byte urbclass::dataFromBus() {
-	if (_dataReceivedFromBus)
+	if (_dataReceivedFromBus) {
 		return _dataReceivedFromBus;
+		_dataReceivedFrom = 0;
 }
 
 // send data to bus

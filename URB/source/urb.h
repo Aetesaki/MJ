@@ -8,7 +8,7 @@
 //    PWM 122 Hz                       //
 //    V.10.2019  Aetesaki              //
 //                                     //
-//    PROTOCOL 2.5                     //
+//    PROTOCOL 2.3                     //
 //    V.5.2019  Steve Massikker        //
 //-------------------------------------//
 
