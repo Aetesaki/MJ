@@ -69,9 +69,9 @@ void urbclass::initializeTrack(byte track, int enablePin, int  pinA, int pinB) {
 	pinMode(_L298EnablePin[local], OUTPUT);
 	pinMode(_L298PinA[local], OUTPUT);
 	pinMode(_L298PinB[local], OUTPUT);
-	// enabling defaults
-	digitalWrite(_L298PinA[local], HIGH);
-	digitalWrite(_L298PinB[local], LOW);
+	// Stop track, and set it to direction forward
+	stopTrack(track);
+	reverseTrack(track,DIRECTION_FORWARD);
 }
 
 // convert internal temporary data to readable data
