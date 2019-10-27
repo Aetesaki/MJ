@@ -59,6 +59,7 @@ void urbclass::setup(int address) {
 
 void urbclass::initializeTrack(byte track, int enablePin, int  pinA, int pinB) {
 	// setting up track connection
+	// use local variable, and subtract one from track to correspond with array
 	byte local = track - 1;
 	// save pins in internal array
 	_L298EnablePin[local] = enablePin;
@@ -92,18 +93,23 @@ void urbclass::sendDataToBus(int address, byte data) {
 
 // functions for controlling the tracks
 void urbclass::controlTrack(byte track, byte speed) {
-	// set the current PWM of track to speed
+	// use local variable, and subtract one from track to correspond with array
 	byte local = track - 1;
+	// set the current PWM of track to speed
 	analogWrite(_L298EnablePin[local], speed);
 }
 
 void urbclass::stopTrack(byte track) {
+	// set the current PWM of track to 0
 	controlTrack(track, 0);
 }
 
 void urbclass::reverseTrack(byte track, byte direction) {
+	// first stop train
 	stopTrack(track);
+	// use local variable, and subtract one from track to correspond with array
 	byte local = track - 1; 
+	// Switch direction as required
 	switch (direction) {
 		case DIRECTION_FORWARD:
 			digitalWrite(_L298PinA[local], HIGH);
