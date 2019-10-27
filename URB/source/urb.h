@@ -22,7 +22,7 @@ class urbClass {
 		// public functions and variables
 		void setupComm(void);
 		void setupComm(int);
-		void setupTrack(byte,int,int,int);
+		void initializeTrack(byte,int,int,int);
 		byte defaultSpeedArray[];
 	private:
 		// private functions and variables

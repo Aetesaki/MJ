@@ -39,7 +39,7 @@ void urbclass::setup(int address) {
 	TCCR1B = TCCR1B & B11111000 | B00000100;   
 }
 
-void urbclass::setupTrack(byte track, int enablePin, int  pinA, int pinB) {
+void urbclass::initializeTrack(byte track, int enablePin, int  pinA, int pinB) {
 	// setting up track connection
 	byte local = track - 1;
 	// save pins internally
