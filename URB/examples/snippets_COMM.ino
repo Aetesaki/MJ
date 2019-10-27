@@ -49,7 +49,8 @@ void setup() {
   Bluetooth.begin(9600);
   inputString.reserve(4);
   URB.setupComm();
-// Initializing Motor-Driver
+  // Initializing Track (track number, enable pin, pinA, pinB)
+  // NOTE: Tracknumber must be higher than 0
   URB.initializeTrack(1, 10, 6, 5);
   URB.initializeTrack(2, 9, 4, 3);
 }
@@ -67,26 +68,26 @@ void loop() {
       resetFunc();
     }  
 
-    // FUNCTIONS 
-    if (inputString.charAt(0) =='a') controlPlayerA();
-    if (inputString.charAt(0) =='b') controlPlayerB();
+    // Further parsing
+    // Edit as required
+    if (inputString.charAt(0) =='a') decodeSpeedForTrack(1);
+    if (inputString.charAt(0) =='b') decodeSpeedForTrack(2);
     if (inputString.charAt(0) =='j') controlJunctions();  
     if (inputString.charAt(0) =='l') controlLights();
     if (inputString.charAt(0) =='g') controlGears(); 
-
+    // parsing complete
     inputString = "";
     stringComplete = false;
-  
   }
 
   // ----  MAIN LOGIC BLOCK
+  // Edit as required
   if (flag_change_junc) {
 
      // Algorithm
 
     flag_change_junc = false;
   }
-
 
   bluetoothEvent();
 }
