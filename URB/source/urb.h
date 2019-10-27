@@ -23,9 +23,9 @@ class urbClass {
 		void setupComm(void);
 		void setupComm(int);
 		void setupTrack(byte,int,int,int);
+		byte defaultSpeedArray[];
 	private:
 		// private functions and variables
-		string _inputString;
 		int _L298EnablePin[10];
 		int _L298PinA[10];
 		int _L298PinB[10];

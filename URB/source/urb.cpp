@@ -14,28 +14,29 @@
 
 #include "Arduino.h"
 #include "urb.h"
-#include <SoftwareSerial.h>
 #include <Wire.h>
 #include <Servo.h>
 
+const byte defaultSpeedArray[] = {20,30,40,50,60,70,80,90,100,110,120,130,140,150,160,170,180,190,200,210,220,230,240,255};
 void(* resetFunc) (void) = 0;
-string _inputString = "";
 int _L298EnablePin[10];
 int _L298PinA[10];
 int _L298PinB[10];
 
-void urbclass::setupComm(void) {
+void urbclass::setup(void) {
 	// Initializing COMM
 	Wire.begin();
-	Serial.begin(9600);
-	_inputString.reserve(4);
+	// Set PWM frequency for D9 & D10
+	// Timer 1 divisor to 256 for PWM frequency of 122.55 Hz
+	TCCR1B = TCCR1B & B11111000 | B00000100;   
 }
 
-void urbclass::setupComm(int address) {
+void urbclass::setup(int address) {
 	// Initializing COMM
 	Wire.begin(address);
-	Serial.begin(9600);
-	_inputString.reserve(4);
+	// Set PWM frequency for D9 & D10
+	// Timer 1 divisor to 256 for PWM frequency of 122.55 Hz
+	TCCR1B = TCCR1B & B11111000 | B00000100;   
 }
 
 void urbclass::setupTrack(byte track, int enablePin, int  pinA, int pinB) {
