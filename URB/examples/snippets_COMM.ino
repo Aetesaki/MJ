@@ -53,6 +53,8 @@ void setup() {
   // NOTE: Tracknumber must be higher than 0
   URB.initializeTrack(1, 10, 6, 5);
   URB.initializeTrack(2, 9, 4, 3);
+  // EXAMPLE other tracks can be controlled from other units
+  // in this case track 9 and 10 
 }
 
 void loop() {
@@ -70,8 +72,10 @@ void loop() {
 
     // Further parsing
     // Edit as required
-    if (inputString.charAt(0) =='a') decodeSpeedForTrack(1);
-    if (inputString.charAt(0) =='b') decodeSpeedForTrack(2);
+    if (inputString.charAt(0) =='a') decodeSpeedForTrack(1); //local track
+    if (inputString.charAt(0) =='b') decodeSpeedForTrack(2); //local track
+    if (inputString.charAt(0) =='i') decodeSpeedForTrack(9); //track elsewhere
+    if (inputString.charAt(0) =='k') decodeSpeedForTrack(10);//track elsewhere
     if (inputString.charAt(0) =='j') controlJunctions();  
     if (inputString.charAt(0) =='l') controlLights();
     if (inputString.charAt(0) =='g') controlGears(); 
