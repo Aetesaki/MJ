@@ -6,6 +6,9 @@
 //    URB 2 FINAL                      //
 //    PROTOCOL 2.5                     //
 //    PWM 122 Hz                       //
+//    V.10.2019  Aetesaki              //
+//                                     //
+//    PROTOCOL 2.3                     //
 //    V.5.2019  Steve Massikker        //
 //-------------------------------------//
 
@@ -44,75 +47,82 @@ bool flag_change_junc = false;
 
 // setup
 void setup() {
-// Initializing COMM
-  Serial.begin(9600);
-  Bluetooth.begin(9600);
-  inputString.reserve(4);
-  URB.setupComm();
-  // Initializing Track (track number, enable pin, pinA, pinB)
-  // NOTE: Tracknumber must be higher than 0
-  URB.initializeTrack(1, 10, 6, 5);
-  URB.initializeTrack(2, 9, 4, 3);
-  // EXAMPLE other tracks can be controlled from other units
-  // in this case track 9 and 10 
+	// Initializing COMM
+	Serial.begin(9600);
+	Bluetooth.begin(9600);
+	inputString.reserve(4);
+	URB.setupComm();
+	// Initializing Track (track number, enable pin, pinA, pinB)
+	// NOTE: Tracknumber must be higher than 0
+	URB.initializeTrack(1, 10, 6, 5);
+	URB.initializeTrack(2, 9, 4, 3);
+	// EXAMPLE other tracks can be controlled from other units
+	// in this case track 9 and 10 
 }
 
 void loop() {
-  // ----  START PARSING INCOMING APP COMMANDS
-  if (stringComplete) {
-    // RESET on receiving code 999z
-    if (inputString =="999z") {
-	  for (byte i = 0; i < sizeof(URBUnits) - 1; i++ ) {
-		// send command 99 to each URB unit listed in the array
-	    URB.sendDataToBus(URBUnits[i], 99);
-	  }
-	  // reset master
-      resetFunc();
-    }  
+	// ----  START PARSING INCOMING APP COMMANDS
+	if (stringComplete) {
+		// RESET on receiving code 999z
+		if (inputString =="999z") {
+			for (byte i = 0; i < sizeof(URBUnits) - 1; i++ ) {
+				// send command 99 to each URB unit listed in the array
+				URB.sendDataToBus(URBUnits[i], 99);
+			}
+			// reset master
+			resetFunc();
+		}  
 
-    // Further parsing
-    // Edit as required
-    if (inputString.charAt(0) =='a') decodeSpeedForTrack(1); //local track
-    if (inputString.charAt(0) =='b') decodeSpeedForTrack(2); //local track
-    if (inputString.charAt(0) =='i') decodeSpeedForTrack(9); //track elsewhere
-    if (inputString.charAt(0) =='k') decodeSpeedForTrack(10);//track elsewhere
-    if (inputString.charAt(0) =='j') controlJunctions();  
-    if (inputString.charAt(0) =='l') controlLights();
-    if (inputString.charAt(0) =='g') controlGears(); 
-    // parsing complete
-    inputString = "";
-    stringComplete = false;
-  }
+		// Further parsing
+		// Edit as required
+    
+		// Track instructions
+		if (inputString.charAt(0) =='a') decodeSpeedForTrack(1, 0); //local track
+		if (inputString.charAt(0) =='b') decodeSpeedForTrack(2, 0); //local track
+		if (inputString.charAt(0) =='i') decodeSpeedForTrack(9, 4); //track elsewhere
+		if (inputString.charAt(0) =='k') decodeSpeedForTrack(10, 103); //track elsewhere
+    
+		// Accessorry instructions
+		if (inputString.charAt(0) =='j') controlJunctions();  
+		if (inputString.charAt(0) =='l') controlLights();
+		if (inputString.charAt(0) =='g') controlGears(); 
+    
+		// parsing complete
+		inputString = "";
+		stringComplete = false;
+	}
 
-  // ----  MAIN LOGIC BLOCK
-  // Edit as required
-  if (flag_change_junc) {
+	// ----  MAIN LOGIC BLOCK
+	// Edit as required
+	if (flag_change_junc) {
 
-     // Algorithm
+		// Algorithm
+		// Add as required
 
-    flag_change_junc = false;
-  }
+		// end of algorithms
+		flag_change_junc = false;
+	}
 
-  bluetoothEvent();
+	bluetoothEvent();
 }
 
 //// FUNCTIONS ////
 void bluetoothEvent() {
-  if (Bluetooth.available()) {
-    char inChar = (char)Bluetooth.read();
-    inputString += inChar;
-    if (inChar == 'z') {
-      stringComplete = true;
-    }
-  }
+	if (Bluetooth.available()) {
+		char inChar = (char)Bluetooth.read();
+		inputString += inChar;
+		if (inChar == 'z') {
+			stringComplete = true;
+		}
+	}
 }
 
 void serialEvent() {
-  if (Serial.available()) {
-    char inChar = (char)Serial.read();
-    inputString += inChar;
-    if (inChar == 'z') {
-      stringComplete = true;
-    }
-  }
+	if (Serial.available()) {
+		char inChar = (char)Serial.read();
+		inputString += inChar;
+		if (inChar == 'z') {
+			stringComplete = true;
+		}
+	}
 }
