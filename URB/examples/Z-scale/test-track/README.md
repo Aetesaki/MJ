@@ -11,4 +11,6 @@ the inner track once, followed by the outer track, then the inner track
 once more before decellerating and finally stopping at the feedback track.
 The Arduino can be reset at that time to drive the train again.
 No interaction is required in this test.
+The code is 182 lines long, and compiles to 3248 bytes, using 416 bytes
+or RAM
 
